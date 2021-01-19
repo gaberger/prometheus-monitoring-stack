@@ -7,7 +7,6 @@ Based on https://github.com/gaberger/prometheus-monitoring-stack/commits?author=
 ## Stack overview
 
 - [Prometheus server](https://prometheus.io/docs/introduction/overview/)
-- Prometheus [Alertmanager](https://prometheus.io/docs/alerting/alertmanager/)
 - [Grafana](http://grafana.org/) for visualization
 - [Reverse-Proxy](https://github.com/nginx-proxy/nginx-proxy) Provide SSL for cross-content
 
