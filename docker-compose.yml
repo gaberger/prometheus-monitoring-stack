@@ -1,79 +1,59 @@
-version: "3"
+version: "3.7"
 
 services:
-  frontend:
-    image: smashwilson/lets-nginx
-    env_file: .env
+  reverse-proxy:
+    image: "jwilder/nginx-proxy:alpine"
+    container_name: "reverse-proxy"
     environment:
-      - UPSTREAM=grafana:3000
+      - DEFAULT_HOST=grafana.local
+      - CERT_NAME=shared
     volumes:
-      - letsencrypt:/etc/letsencrypt
-      - letsencrypt_backups:/var/lib/letsencrypt
-      - dhparam_cache:/cache
+      # - "html:/usr/share/nginx/html"
+      # - "dhparam:/etc/nginx/dhparam"
+      # - "vhost:/etc/nginx/vhost.d"
+      - /home/gary/development/docker/prometheus-monitoring-stack/certs:/etc/nginx/certs
+      - "/run/docker.sock:/tmp/docker.sock:ro"
+    restart: "always"
     ports:
-      - "443:443"
       - "80:80"
-    links:
-      - grafana
+      - "443:443"
 
   grafana:
     image: grafana/grafana
-    env_file: .env
+    container_name: "grafana"
+    environment:
+      - CERT_NAME=shared
+      - VIRTUAL_HOST=grafana.local
+      - GF_LOG_LEVEL=debug
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_USERS_ALLOW_SIGN_UP=false"
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+    ports:
+      - 3000
     volumes:
+      - /home/gary/development/docker/prometheus-monitoring-stack/certs:/etc/ssl/certs:ro
       - grafana_data:/var/lib/grafana
-    links:
-      - prometheus
 
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:v2.19.0
+    container_name: "prometheus"
     volumes:
+      - /home/gary/development/docker/prometheus-monitoring-stack/certs:/etc/ssl/certs:ro
       - prometheus_data:/prometheus
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./config/alert.rules:/etc/prometheus/alert.rules
-    links:
-      - node_exporter
-      - alertmanager
+    environment:
+      - CERT_NAME=shared
+      - VIRTUAL_HOST=prom.local
+    ports:
+      - 9090
     command:
-      - -config.file=/etc/prometheus/prometheus.yml
-      - -alertmanager.url=http://alertmanager:9093
-
-  alertmanager:
-    image: prom/alertmanager
-    volumes:
-      - ./config/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-    depends_on:
-      - configuration_manager
-    command:
-      - -config.file=/etc/alertmanager/alertmanager.yml
-
-  node_exporter:
-    image: prom/node-exporter
-    volumes:
-      - /proc:/host/proc
-      - /sys:/host/sys
-      - /:/rootfs
-    command:
-      - -collector.procfs=/host/proc
-      - -collector.sysfs=/host/sys
-      - -collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"
-
-  configuration_manager:
-    image: busybox
-    env_file: .env
-    volumes:
-      - ./config:/config
-    entrypoint:
-      - /bin/sh
-      - -c
-    command:
-      - sed "s,ALERT_SLACK_USERNAME,$ALERT_SLACK_USERNAME,g;
-             s,ALERT_SLACK_CHANNEL,$ALERT_SLACK_CHANNEL,g;
-             s,ALERT_SLACK_INCOMING_WEBHOOK_URL,$ALERT_SLACK_INCOMING_WEBHOOK_URL,g"
-             /config/alertmanager.template.yml > /config/alertmanager.yml
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
 
 volumes:
   prometheus_data:
   grafana_data:
   letsencrypt:
   letsencrypt_backups:
-  dhparam_cache:
+  certs:

@@ -1,17 +1,26 @@
-global:
-  scrape_interval: 15s
-  external_labels:
-    monitor: "docker-monitor"
-
 scrape_configs:
-  - job_name: "prometheus"
+  - job_name: 'snmp'
+    metric_relabel_configs:
+    - source_labels: ["__name__"]
+      regex: "ifDescr=([^_]+).*"
+      target_label: "alias"
+      replacement: $1
     static_configs:
-      - targets: ["prometheus:9090"]
-
-  - job_name: "node"
-    scrape_interval: 5s
-    static_configs:
-      - targets: ["node_exporter:9100"]
-
-rule_files:
-  - "alert.rules"
+      - targets:
+        - device1
+        - device2
+        - device3
+        - device4
+        - device5
+        - device6
+        - device7
+    metrics_path: /snmp
+    params:
+      module: [if_mib]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 10.128.1.26:9116
