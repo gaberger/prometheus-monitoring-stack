@@ -1,0 +1,288 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 2,
+  "iteration": 1611162084857,
+  "links": [],
+  "panels": [
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 2,
+      "fillGradient": 7,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 2,
+      "legend": {
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.3.7",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(ifHCInOctets{ifDescr=~\"$interface.*\",instance=\"$servers\"}[5m])",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "InOctets",
+          "refId": "A"
+        },
+        {
+          "expr": "irate(ifHCOutOctets{ifDescr=~\"$interface.*\",instance=\"$servers\"}[5m])",
+          "interval": "",
+          "legendFormat": "OutOctets",
+          "refId": "B"
+        },
+        {
+          "expr": "irate(ifInErrors{ifDescr=~\"$interface.*\",instance=\"$servers\"}[5m])",
+          "interval": "",
+          "legendFormat": "Inerrors",
+          "refId": "C"
+        },
+        {
+          "expr": "irate(ifOutErrors{ifDescr=~\"$interface.*\",instance=\"$servers\"}[5m])",
+          "interval": "",
+          "legendFormat": "OutErrors",
+          "refId": "D"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "$servers - $interface",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:446",
+          "format": "Bps",
+          "label": "Bytes/sec",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:447",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "device1",
+          "value": "device1"
+        },
+        "datasource": "Prometheus",
+        "definition": "scrape_series_added",
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "servers",
+        "options": [
+          {
+            "selected": true,
+            "text": "device1",
+            "value": "device1"
+          },
+          {
+            "selected": false,
+            "text": "device2",
+            "value": "device2"
+          },
+          {
+            "selected": false,
+            "text": "device3",
+            "value": "device3"
+          },
+          {
+            "selected": false,
+            "text": "device4",
+            "value": "device4"
+          },
+          {
+            "selected": false,
+            "text": "device5",
+            "value": "device5"
+          },
+          {
+            "selected": false,
+            "text": "device6",
+            "value": "device6"
+          },
+          {
+            "selected": false,
+            "text": "device7",
+            "value": "device7"
+          }
+        ],
+        "query": "scrape_series_added",
+        "refresh": 0,
+        "regex": "/.*instance=\"([^\"]*).*/",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "FastEthernet0/0",
+          "value": "FastEthernet0/0"
+        },
+        "datasource": "Prometheus",
+        "definition": "query_result(ifOperStatus==1) ",
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "interface",
+        "options": [
+          {
+            "selected": false,
+            "text": "Ethernet1/0",
+            "value": "Ethernet1/0"
+          },
+          {
+            "selected": false,
+            "text": "Ethernet1/1",
+            "value": "Ethernet1/1"
+          },
+          {
+            "selected": false,
+            "text": "Ethernet1/2",
+            "value": "Ethernet1/2"
+          },
+          {
+            "selected": false,
+            "text": "Ethernet1/3",
+            "value": "Ethernet1/3"
+          },
+          {
+            "selected": true,
+            "text": "FastEthernet0/0",
+            "value": "FastEthernet0/0"
+          },
+          {
+            "selected": false,
+            "text": "Loopback9",
+            "value": "Loopback9"
+          },
+          {
+            "selected": false,
+            "text": "Null0",
+            "value": "Null0"
+          },
+          {
+            "selected": false,
+            "text": "Tunnel1",
+            "value": "Tunnel1"
+          }
+        ],
+        "query": "query_result(ifOperStatus==1) ",
+        "refresh": 0,
+        "regex": ".*ifDescr=\"(([^,\"])*).*",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Forward Dashboard",
+  "uid": "yBHVutBGz",
+  "version": 2
+}
